@@ -37,28 +37,7 @@
                    Grid.Row="1"
                    Margin="0"
                    FontFamily="Segoe UI">
-            <Run>This app shows some advanced usages of the UWP Community Toolkit </Run>
-            <Hyperlink NavigateUri="https://docs.microsoft.com/en-us/windows/uwpcommunitytoolkit/helpers/printhelper">PrintHelper</Hyperlink>
-            <Run> class:</Run>
-            <LineBreak />
-            <Run>* adding headers and footers,</Run>
-            <LineBreak />
-            <Run>* page numbering,</Run>
-            <LineBreak />
-            <Run>* printing list items on a separate page, and</Run>
-            <LineBreak />
-            <Run>* printing a more complex report.</Run>
-            <LineBreak />
-            <LineBreak />           
-            <LineBreak />
-            <Run FontSize="18">Header page icon created by Maria Denisco from the Noun Project.</Run>
-            <LineBreak />
-            <Run FontSize="18">List page icon created by Sarah JOY from the Noun Project.</Run>
-            <LineBreak />
-            <Run FontSize="18">Report page icon created by Yamini Ahluwalia from the Noun Project.</Run>
-            <LineBreak />
-            <Run FontSize="18">Background image</Run>
-            <Hyperlink NavigateUri="http://www.freepik.com">Designed by Creative_hat / Freepik</Hyperlink>
+            <Run>Blablabla later later later </Run>
             <Run>.</Run>
         </TextBlock>
     </Grid>
