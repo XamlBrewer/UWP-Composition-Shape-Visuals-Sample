@@ -13,11 +13,6 @@
                 Background="Transparent"
                 Height="200"
                 Width="200">
-            <Ellipse x:Name="Face"
-                     Height="200"
-                     Width="200"
-                     Canvas.Left="0"
-                     Canvas.Top="0" />
         </Canvas>
     </Viewbox>
 </UserControl>

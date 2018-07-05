@@ -6,7 +6,6 @@ using Windows.UI;
 using Windows.UI.Composition;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Media;
 
 namespace XamlBrewer.Uwp.Controls
 {
@@ -34,23 +33,30 @@ namespace XamlBrewer.Uwp.Controls
 
         public bool ShowTicks { get; set; } = true;
 
-        public Brush FaceColor { get; set; } = new SolidColorBrush(Colors.Transparent);
-
-        public ImageSource BackgroundImage { get; set; }
-
         private void Clock_Loaded(object sender, RoutedEventArgs e)
         {
-            Face.Fill = FaceColor;
-
             _root = Container.GetVisual();
             _compositor = Window.Current.Compositor;
+
+            // A container to host multiple sprites.
+            var shapeContainer = _compositor.CreateContainerShape();
+
+            // Face
+            var faceEllipse = _compositor.CreateEllipseGeometry();
+            faceEllipse.Radius = new Vector2(100.0f, 100.0f);
+            var face = _compositor.CreateSpriteShape(faceEllipse);
+            face.FillBrush = _compositor.CreateColorBrush(Color.FromArgb(0x66, 0x9A, 0xCD, 0x32));
+            face.StrokeThickness = 0.5f;
+            var linearGradientBrush = _compositor.CreateLinearGradientBrush();
+            linearGradientBrush.ColorStops.Add(_compositor.CreateColorGradientStop(0, Color.FromArgb(0x55, 0xFF, 0xFF, 0xFF)));
+            linearGradientBrush.ColorStops.Add(_compositor.CreateColorGradientStop(1, Color.FromArgb(0x99, 0x9A, 0xCD, 0x32)));
+            face.StrokeBrush = linearGradientBrush; 
+            face.Offset = new Vector2(100.0f, 100.0f);
+            shapeContainer.Shapes.Add(face);
 
             // Hour Ticks
             if (ShowTicks)
             {
-                // A container to host multiple sprites.
-                var shapeContainer = _compositor.CreateContainerShape();
-
                 // SpriteVisual tick;
                 for (int i = 0; i < 12; i++)
                 {
@@ -59,6 +65,8 @@ namespace XamlBrewer.Uwp.Controls
 
                     var tick = _compositor.CreateSpriteShape(ellipse);
                     tick.FillBrush = _compositor.CreateColorBrush(Colors.White);
+                    tick.StrokeThickness = 0.25f;
+                    tick.StrokeBrush = _compositor.CreateColorBrush(Color.FromArgb(0xBB, 0x9A, 0xCD, 0x32));
                     tick.Offset = new Vector2(100.0f, 20.0f);
                     tick.CenterPoint = new Vector2(0.0f, 80.0f);
                     tick.RotationAngleInDegrees = i * 30;
@@ -72,28 +80,28 @@ namespace XamlBrewer.Uwp.Controls
             }
 
             // Second Hand
-            var startPathBuilder = new CanvasPathBuilder(new CanvasDevice());
+            var canvasPathBuilder = new CanvasPathBuilder(new CanvasDevice());
 
-            // Use my helper to create a W shaped path
-            startPathBuilder.BuildPathWithLines(new(float x, float y)[]
+            // Create a triangle.
+            canvasPathBuilder.BuildPathWithLines(new(float x, float y)[]
                 {
-                    (3, 0),
                     (0, 80),
+                    (3, 0),
                     (6, 80)
                 },
                 CanvasFigureLoop.Closed);
+            var canvasGeometry = CanvasGeometry.CreatePath(canvasPathBuilder);
+            var compositionPath = new CompositionPath(canvasGeometry);
             var pathGeometry = _compositor.CreatePathGeometry();
+            pathGeometry.Path = compositionPath;
+
             _secondhand = _compositor.CreateSpriteShape(pathGeometry);
-
-            var startGeometry = CanvasGeometry.CreatePath(startPathBuilder);
-            var startPath = new CompositionPath(startGeometry);
-
-            pathGeometry.Path = startPath;
             _secondhand.FillBrush = _compositor.CreateColorBrush(Colors.Transparent);
             _secondhand.StrokeThickness = .5f;
-            _secondhand.StrokeBrush = _compositor.CreateColorBrush(Colors.Red);
+            _secondhand.StrokeBrush = _compositor.CreateColorBrush(Colors.Tomato);
             _secondhand.Offset = new Vector2(97.0f, 20.0f);
             _secondhand.CenterPoint = new Vector2(3.0f, 80.0f);
+
             var handShapeVisual = _compositor.CreateShapeVisual();
             handShapeVisual = _compositor.CreateShapeVisual();
             handShapeVisual.Size = new Vector2(200.0f, 200.0f);
@@ -103,12 +111,12 @@ namespace XamlBrewer.Uwp.Controls
 
             // Hour Hand
             var roundedRectangle = _compositor.CreateRoundedRectangleGeometry();
-            roundedRectangle.Size = new Vector2(6.0f, 60.0f);
+            roundedRectangle.Size = new Vector2(6.0f, 63.0f);
             roundedRectangle.CornerRadius = new Vector2(3.0f, 3.0f);
             _hourhand = _compositor.CreateSpriteShape(roundedRectangle);
-            _hourhand.FillBrush = _compositor.CreateColorBrush(Colors.Black);
-            _hourhand.Offset = new Vector2(97.0f, 43.0f);
-            _hourhand.CenterPoint = new Vector2(3.0f, 57.0f);
+            _hourhand.FillBrush = _compositor.CreateColorBrush(Colors.DarkSlateGray);
+            _hourhand.Offset = new Vector2(97.0f, 40.0f);
+            _hourhand.CenterPoint = new Vector2(3.0f, 60.0f);
             handShapeVisual = _compositor.CreateShapeVisual();
             handShapeVisual.Size = new Vector2(200.0f, 200.0f);
             handShapeVisual.Shapes.Add(_hourhand);
@@ -116,28 +124,18 @@ namespace XamlBrewer.Uwp.Controls
 
             // Minute Hand
             roundedRectangle = _compositor.CreateRoundedRectangleGeometry();
-            roundedRectangle.Size = new Vector2(6.0f, 100.0f);
+            roundedRectangle.Size = new Vector2(6.0f, 93.0f);
             roundedRectangle.CornerRadius = new Vector2(3.0f, 3.0f);
             _minutehand = _compositor.CreateSpriteShape(roundedRectangle);
-            _minutehand.FillBrush = _compositor.CreateColorBrush(Colors.Black);
-            _minutehand.Offset = new Vector2(97.0f, 3.0f);
-            _minutehand.CenterPoint = new Vector2(3.0f, 97.0f);
+            _minutehand.FillBrush = _compositor.CreateColorBrush(Colors.DarkSlateGray);
+            _minutehand.Offset = new Vector2(97.0f, 10.0f);
+            _minutehand.CenterPoint = new Vector2(3.0f, 90.0f);
             handShapeVisual = _compositor.CreateShapeVisual();
             handShapeVisual.Size = new Vector2(200.0f, 200.0f);
             handShapeVisual.Shapes.Add(_minutehand);
             _root.Children.InsertAtTop(handShapeVisual);
 
             SetHoursAndMinutes();
-
-            // Add XAML element.
-            if (BackgroundImage != null)
-            {
-                var xaml = new Image();
-                xaml.Source = BackgroundImage;
-                xaml.Height = 200;
-                xaml.Width = 200;
-                Container.Children.Add(xaml);
-            }
 
             _timer.Start();
         }

@@ -33,12 +33,8 @@
               Width="48"
               Margin="0 0 20 0"
               Stretch="Uniform" />
+        
         <controls:Clock Margin="100 20 100 100"
-                        Grid.Row="1">
-            <controls:Clock.FaceColor>
-                <SolidColorBrush Color="DimGray"
-                                 Opacity=".4" />
-            </controls:Clock.FaceColor>
-        </controls:Clock>
+                        Grid.Row="1" />
     </Grid>
 </Page>

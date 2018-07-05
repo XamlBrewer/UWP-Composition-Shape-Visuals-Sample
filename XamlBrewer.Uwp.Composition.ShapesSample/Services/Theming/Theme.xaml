@@ -37,7 +37,6 @@
                      Color="DimGray" />
 
     <!-- Splitview Content -->
-    <Color x:Key="PageBackgroundColor">#ffebf5ee</Color>
     <SolidColorBrush x:Key="PageBackgroundBrush"
                      Color="Transparent" />
     <SolidColorBrush x:Key="PageTitleBrush"
