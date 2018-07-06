@@ -100,6 +100,9 @@
     </Compile>
     <Compile Include="Controls\PathBuilderExtensions.cs" />
     <Compile Include="Controls\UIElementExtensions.cs" />
+    <Compile Include="Services\AnimatedSplashScreen\CompositionImage.cs" />
+    <Compile Include="Services\AnimatedSplashScreen\PageExtensions.cs" />
+    <Compile Include="Services\AnimatedSplashScreen\SurfaceLoader.cs" />
     <Compile Include="Services\Icons\Icon.cs" />
     <Compile Include="Services\Navigation\Navigation.cs" />
     <Compile Include="Services\Theming\Theme.cs" />

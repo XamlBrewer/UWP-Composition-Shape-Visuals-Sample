@@ -14,6 +14,7 @@ using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
+using XamlBrewer.Uwp.Controls;
 
 namespace XamlBrewer.Uwp.Composition.ShapesSample
 {
@@ -67,6 +68,7 @@ namespace XamlBrewer.Uwp.Composition.ShapesSample
                     // configuring the new page by passing required information as a navigation
                     // parameter
                     rootFrame.Navigate(typeof(Shell), e.Arguments);
+                    (rootFrame.Content as Page).OpenFromSplashScreen(e.SplashScreen.ImageLocation);
                 }
                 // Ensure the current window is active
                 Window.Current.Activate();
