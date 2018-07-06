@@ -13,35 +13,21 @@ namespace Mvvm.Services
     {
         private static Dictionary<Type, Color> AccentColors = new Dictionary<Type, Color>();
 
-        // Call this in App OnLaunched.
-        // Requires reference to Windows Mobile Extensions for the UWP.
         /// <summary>
         /// Applies to the theme to the Application View.
         /// </summary>
         public static void ApplyToContainer()
         {
-            // Custom accent color.
+            // Accent color.
             ApplyAccentColor((Color)Application.Current.Resources["DefaultAccentColor"]);
 
-            // PC customization
-            if (ApiInformation.IsTypePresent("Windows.UI.ViewManagement.ApplicationView"))
+            // Title bar.
+            var titleBar = ApplicationView.GetForCurrentView().TitleBar;
+            if (titleBar != null)
             {
-                var titleBar = ApplicationView.GetForCurrentView().TitleBar;
-                if (titleBar != null)
-                {
-                    titleBar.BackgroundColor = ((SolidColorBrush)Application.Current.Resources["TitlebarBackgroundBrush"]).Color;
-                    titleBar.ForegroundColor = ((SolidColorBrush)Application.Current.Resources["TitlebarForegroundBrush"]).Color;
-                    titleBar.ButtonBackgroundColor = titleBar.BackgroundColor;
-                    titleBar.ButtonForegroundColor = ((SolidColorBrush)Application.Current.Resources["TitlebarForegroundBrush"]).Color;
-                    titleBar.ButtonHoverBackgroundColor = ((SolidColorBrush)Application.Current.Resources["TitlebarBackgroundDarkBrush"]).Color;
-                    titleBar.ButtonHoverForegroundColor = ((SolidColorBrush)Application.Current.Resources["TitlebarForegroundBrush"]).Color;
-                    titleBar.ButtonPressedBackgroundColor = ((SolidColorBrush)Application.Current.Resources["TitlebarBackgroundLightBrush"]).Color;
-                    titleBar.ButtonPressedForegroundColor = ((SolidColorBrush)Application.Current.Resources["TitlebarForegroundBrush"]).Color;
-                    titleBar.InactiveBackgroundColor = titleBar.BackgroundColor;
-                    titleBar.InactiveForegroundColor = titleBar.ForegroundColor;
-                    titleBar.ButtonInactiveBackgroundColor = titleBar.BackgroundColor;
-                    titleBar.ButtonInactiveForegroundColor = titleBar.ButtonForegroundColor;
-                }
+                titleBar.ButtonBackgroundColor = Colors.Transparent;
+                titleBar.ButtonInactiveBackgroundColor = Colors.Transparent;
+                titleBar.ButtonForegroundColor = (Color)Application.Current.Resources["TitlebarButtonForegroundColor"];
             }
         }
 
