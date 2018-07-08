@@ -53,13 +53,4 @@ namespace XamlBrewer.Uwp.Controls
             _vector2 = vector2;
         }
     }
-
-    public enum NodeType
-    {
-        Line,
-        Arc,
-        CubicBezier,
-        Geometry,
-        QuadraticBezier
-    }
 }

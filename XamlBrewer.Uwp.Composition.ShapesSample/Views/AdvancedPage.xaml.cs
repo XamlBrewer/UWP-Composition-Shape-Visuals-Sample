@@ -2,9 +2,9 @@
 
 namespace XamlBrewer.Uwp.Composition.ShapesSample
 {
-    public sealed partial class MainPage : Page
+    public sealed partial class AdvancedPage : Page
     {
-        public MainPage()
+        public AdvancedPage()
         {
             this.InitializeComponent();
         }
