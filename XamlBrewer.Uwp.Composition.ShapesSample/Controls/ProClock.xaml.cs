@@ -15,9 +15,9 @@ namespace XamlBrewer.Uwp.Controls
         private Compositor _compositor;
         private ContainerVisual _root;
 
-        private CompositionSpriteShape _hourhand;
-        private CompositionSpriteShape _minutehand;
-        private CompositionSpriteShape _secondhand;
+        private CompositionSpriteShape _hourhandSpriteShape;
+        private CompositionSpriteShape _minutehandSpriteShape;
+        private CompositionSpriteShape _secondhandSpriteShape;
         private CompositionScopedBatch _batch;
 
         private DispatcherTimer _timer = new DispatcherTimer();
@@ -40,7 +40,7 @@ namespace XamlBrewer.Uwp.Controls
             _compositor = Window.Current.Compositor;
 
             // A container to host multiple sprites.
-            var shapeContainer = _compositor.CreateContainerShape();
+            var containerShape = _compositor.CreateContainerShape();
 
             // Face
             // https://github.com/ratishphilip/CompositionProToolkit/blob/master/SampleGallery/SampleGallery/Views/CanvasGeometryParserPage.xaml.cs
@@ -50,14 +50,14 @@ namespace XamlBrewer.Uwp.Controls
             var facePathGeometry = _compositor.CreatePathGeometry();
             facePathGeometry.Path = faceCompositionPath;
 
-            var face = _compositor.CreateSpriteShape(facePathGeometry);
-            face.FillBrush = _compositor.CreateColorBrush(Color.FromArgb(0x66, 0x9A, 0xCD, 0x32));
-            face.Offset = new Vector2(12.0f, 13.0f);
-            face.Scale = new Vector2(5.5f); ;
+            var faceSpriteShape = _compositor.CreateSpriteShape(facePathGeometry);
+            faceSpriteShape.FillBrush = _compositor.CreateColorBrush(Color.FromArgb(0x66, 0x9A, 0xCD, 0x32));
+            faceSpriteShape.Offset = new Vector2(12.0f, 13.0f);
+            faceSpriteShape.Scale = new Vector2(5.5f); ;
 
             var faceShapeVisual = _compositor.CreateShapeVisual();
             faceShapeVisual.Size = new Vector2(200.0f, 200.0f);
-            faceShapeVisual.Shapes.Add(face);
+            faceShapeVisual.Shapes.Add(faceSpriteShape);
             _root.Children.InsertAtTop(faceShapeVisual);
 
             // Hour Ticks
@@ -66,22 +66,22 @@ namespace XamlBrewer.Uwp.Controls
                 // SpriteVisual tick;
                 for (int i = 0; i < 12; i++)
                 {
-                    var ellipse = _compositor.CreateEllipseGeometry();
-                    ellipse.Radius = new Vector2(4.0f, 4.0f);
+                    var ellipseGeometry = _compositor.CreateEllipseGeometry();
+                    ellipseGeometry.Radius = new Vector2(4.0f, 4.0f);
 
-                    var tick = _compositor.CreateSpriteShape(ellipse);
-                    tick.FillBrush = _compositor.CreateColorBrush(Colors.Transparent);
-                    tick.StrokeThickness = 0.5f;
-                    tick.StrokeBrush = _compositor.CreateColorBrush(Color.FromArgb(0xBB, 0x9A, 0xCD, 0x32));
-                    tick.Offset = new Vector2(100.0f, 5.0f);
-                    tick.CenterPoint = new Vector2(0.0f, 95.0f);
-                    tick.RotationAngleInDegrees = i * 30;
-                    shapeContainer.Shapes.Add(tick);
+                    var tickSpriteShape = _compositor.CreateSpriteShape(ellipseGeometry);
+                    tickSpriteShape.FillBrush = _compositor.CreateColorBrush(Colors.Transparent);
+                    tickSpriteShape.StrokeThickness = 0.5f;
+                    tickSpriteShape.StrokeBrush = _compositor.CreateColorBrush(Color.FromArgb(0xBB, 0x9A, 0xCD, 0x32));
+                    tickSpriteShape.Offset = new Vector2(100.0f, 5.0f);
+                    tickSpriteShape.CenterPoint = new Vector2(0.0f, 95.0f);
+                    tickSpriteShape.RotationAngleInDegrees = i * 30;
+                    containerShape.Shapes.Add(tickSpriteShape);
                 }
 
                 var tickShapeVisual = _compositor.CreateShapeVisual();
                 tickShapeVisual.Size = new Vector2(200.0f, 200.0f);
-                tickShapeVisual.Shapes.Add(shapeContainer);
+                tickShapeVisual.Shapes.Add(containerShape);
                 _root.Children.InsertAtTop(tickShapeVisual);
             }
 
@@ -92,17 +92,17 @@ namespace XamlBrewer.Uwp.Controls
             var compositionPath = new CompositionPath(canvasGeometry);
             var pathGeometry = _compositor.CreatePathGeometry();
             pathGeometry.Path = compositionPath;
-            _secondhand = _compositor.CreateSpriteShape(pathGeometry);
-            _secondhand.FillBrush = _compositor.CreateColorBrush(Colors.Tomato);
-            _secondhand.Offset = new Vector2(100f, 5f);
-            _secondhand.CenterPoint = new Vector2(0.0f, 95.0f);
+            _secondhandSpriteShape = _compositor.CreateSpriteShape(pathGeometry);
+            _secondhandSpriteShape.FillBrush = _compositor.CreateColorBrush(Colors.Tomato);
+            _secondhandSpriteShape.Offset = new Vector2(100f, 5f);
+            _secondhandSpriteShape.CenterPoint = new Vector2(0.0f, 95.0f);
 
             var handShapeVisual = _compositor.CreateShapeVisual();
             handShapeVisual = _compositor.CreateShapeVisual();
             handShapeVisual.Size = new Vector2(200.0f, 200.0f);
-            handShapeVisual.Shapes.Add(_secondhand);
+            handShapeVisual.Shapes.Add(_secondhandSpriteShape);
             _root.Children.InsertAtTop(handShapeVisual);
-            _secondhand.RotationAngleInDegrees = (float)(int)DateTime.Now.TimeOfDay.TotalSeconds * 6;
+            _secondhandSpriteShape.RotationAngleInDegrees = (float)(int)DateTime.Now.TimeOfDay.TotalSeconds * 6;
 
             // Hour Hand
             pathData = "M5.4985821,18.057423C4.918455,18.058264 3.5173249,18.173275 2.7009144,19.187313 1.7689097,20.345285 1.7639097,22.472235 2.6849146,25.336166 2.7549148,25.518162 4.7979251,30.666039 13.64697,29.926056 15.727981,29.942057 17.56599,29.201075 18.941997,27.837107 20.236003,26.555138 20.949007,24.867178 20.949007,23.08322L20.945943,20.727419 20.841051,20.76297C20.559425,20.850718,20.260129,20.898003,19.950004,20.898003L19.556005,20.898003C18.625632,20.898003,17.792712,20.472437,17.241986,19.805511L17.208552,19.762995 17.110358,19.82601C16.656746,20.101946,16.124579,20.260994,15.556017,20.260994L15.163018,20.260994C14.852893,20.260994,14.553596,20.213675,14.27197,20.125875L14.262194,20.12256 14.247074,20.197342C13.884972,21.760424,12.319589,22.940224,10.447954,22.940224L6.1909325,22.940224C5.6389294,22.940224 5.1909271,22.492233 5.1909274,21.940247 5.1909271,21.38826 5.6389294,20.940271 6.1909325,20.940271L10.447954,20.940271C11.465959,20.940271 12.325963,20.283287 12.325963,19.506306 12.325963,18.728323 11.465959,18.071339 10.447954,18.071339L5.8669305,18.071339C5.8319304,18.071339 5.7969303,18.06934 5.76193,18.066339 5.7590861,18.065903 5.6610174,18.057186 5.4985821,18.057423z M19.556005,12.521002C19.038507,12.521002,18.612414,12.915631,18.561174,13.41897L18.556015,13.52087 18.556015,17.260996 18.556008,17.898003C18.556008,18.450003,19.004007,18.898003,19.556005,18.898003L19.950004,18.898003C20.501003,18.898003,20.950002,18.450003,20.950002,17.898003L20.950002,13.521002C20.950002,12.970002,20.501003,12.521002,19.950004,12.521002z M15.163018,11.156998C14.611018,11.156998,14.163019,11.605998,14.163019,12.156998L14.163019,17.260996C14.163019,17.811995,14.611018,18.260996,15.163018,18.260996L15.556017,18.260996C16.07258,18.260996,16.499493,17.866365,16.55084,17.363028L16.556012,17.261089 16.556012,13.521002 16.556016,12.156998C16.556016,11.605998,16.107017,11.156998,15.556017,11.156998z M10.966014,10.422006C10.348202,10.422006,9.8376169,10.886947,9.776207,11.479824L9.7700343,11.599635 9.7700343,13.573996 9.7700152,13.574373 9.7700152,16.071388 10.447954,16.071388C11.049551,16.071388,11.619506,16.193281,12.128033,16.410637L12.159335,16.424856 12.163013,16.348003 12.163013,11.600005C12.163013,10.951005,11.626013,10.422006,10.966014,10.422006z M6.5230465,1.9999924C5.8690224,1.9999921,5.37604,2.5270002,5.37604,3.2269967L5.37604,16.058529 5.4411616,16.057322C5.6611521,16.055147,5.8246179,16.064638,5.9099309,16.071388L7.7700167,16.071388 7.7700167,11.600005 7.7700286,11.599538 7.7700286,3.2269967C7.7700286,2.5499952,7.2110367,1.9999921,6.5230465,1.9999924z M6.5240231,0C8.3140368,0,9.7700343,1.4480056,9.7700343,3.2269967L9.7700343,8.6536684 9.8679652,8.6152C10.210494,8.490242 10.580359,8.4220057 10.966014,8.4220057 11.957701,8.4220057 12.84529,8.8732004 13.432115,9.5798149L13.497941,9.6630468 13.608677,9.5919828C14.062288,9.3160477,14.594455,9.1569986,15.163018,9.1569986L15.556017,9.1569986C16.693141,9.1569986,17.684687,9.7931938,18.193356,10.728285L18.242692,10.82447 18.256628,10.817322C18.649995,10.627473,19.090819,10.521002,19.556005,10.521002L19.950004,10.521002C21.604002,10.521002,22.949998,11.867002,22.949998,13.521002L22.949998,17.898003C22.949998,18.00144,22.94474,18.103666,22.934478,18.20443L22.924722,18.280989 22.937686,18.365147C22.94115,18.398743,22.942955,18.432831,22.943017,18.467331L22.949018,23.08222C22.949018,25.404165 22.026014,27.597113 20.350004,29.258072 18.591996,31.001032 16.238984,31.939009 13.721971,31.92301 13.073967,31.978008 12.456964,32.003006 11.868961,32.003006 3.0589163,32.003006 0.88590527,26.241144 0.79190493,25.98015 -0.37610126,22.350237 -0.25010061,19.647303 1.1569066,17.915344 1.7644097,17.167612 2.5206948,16.71631 3.2527398,16.446163L3.3760343,16.403019 3.3760343,3.2269967C3.3760342,1.4169997,4.7590338,0,6.5240231,0z";
@@ -111,23 +111,23 @@ namespace XamlBrewer.Uwp.Controls
             var handPathGeometry = _compositor.CreatePathGeometry();
             handPathGeometry.Path = handCompositionPath;
 
-            _hourhand = _compositor.CreateSpriteShape(handPathGeometry);
-            _hourhand.FillBrush = _compositor.CreateColorBrush(Colors.DarkSlateGray);
-            _hourhand.Offset = new Vector2(96.0f, 40f);
-            _hourhand.CenterPoint = new Vector2(4.0f, 60.0f);
+            _hourhandSpriteShape = _compositor.CreateSpriteShape(handPathGeometry);
+            _hourhandSpriteShape.FillBrush = _compositor.CreateColorBrush(Colors.DarkSlateGray);
+            _hourhandSpriteShape.Offset = new Vector2(96.0f, 40f);
+            _hourhandSpriteShape.CenterPoint = new Vector2(4.0f, 60.0f);
             handShapeVisual = _compositor.CreateShapeVisual();
             handShapeVisual.Size = new Vector2(200.0f, 200.0f);
-            handShapeVisual.Shapes.Add(_hourhand);
+            handShapeVisual.Shapes.Add(_hourhandSpriteShape);
             _root.Children.InsertAtTop(handShapeVisual);
 
             // Minute Hand
-            _minutehand = _compositor.CreateSpriteShape(handPathGeometry);
-            _minutehand.FillBrush = _compositor.CreateColorBrush(Colors.DarkSlateGray);
-            _minutehand.Offset = new Vector2(96.0f, 10.0f);
-            _minutehand.CenterPoint = new Vector2(4.0f, 90.0f);
+            _minutehandSpriteShape = _compositor.CreateSpriteShape(handPathGeometry);
+            _minutehandSpriteShape.FillBrush = _compositor.CreateColorBrush(Colors.DarkSlateGray);
+            _minutehandSpriteShape.Offset = new Vector2(96.0f, 10.0f);
+            _minutehandSpriteShape.CenterPoint = new Vector2(4.0f, 90.0f);
             handShapeVisual = _compositor.CreateShapeVisual();
             handShapeVisual.Size = new Vector2(200.0f, 200.0f);
-            handShapeVisual.Shapes.Add(_minutehand);
+            handShapeVisual.Shapes.Add(_minutehandSpriteShape);
             _root.Children.InsertAtTop(handShapeVisual);
 
             SetHoursAndMinutes();
@@ -154,7 +154,7 @@ namespace XamlBrewer.Uwp.Controls
             animation.InsertExpressionKeyFrame(1.00f, "start + delta");
 
             animation.Duration = TimeSpan.FromMilliseconds(900);
-            _secondhand.StartAnimation(nameof(_secondhand.RotationAngleInDegrees), animation);
+            _secondhandSpriteShape.StartAnimation(nameof(_secondhandSpriteShape.RotationAngleInDegrees), animation);
             _batch.End();
             _batch.Completed += Batch_Completed;
         }
@@ -172,8 +172,8 @@ namespace XamlBrewer.Uwp.Controls
         private void SetHoursAndMinutes()
         {
             var now = DateTime.Now;
-            _hourhand.RotationAngleInDegrees = (float)now.TimeOfDay.TotalHours * 30;
-            _minutehand.RotationAngleInDegrees = now.Minute * 6;
+            _hourhandSpriteShape.RotationAngleInDegrees = (float)now.TimeOfDay.TotalHours * 30;
+            _minutehandSpriteShape.RotationAngleInDegrees = now.Minute * 6;
         }
     }
 }
