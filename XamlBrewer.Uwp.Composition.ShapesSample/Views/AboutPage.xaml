@@ -37,8 +37,31 @@
                    Grid.Row="1"
                    Margin="0"
                    FontFamily="Segoe UI">
-            <Run>Blablabla later later later </Run>
-            <Run>.</Run>
+            <Run>Demonstrates using the Composition API to draw and animate shapes:</Run>
+            <LineBreak />
+            <Run>* Ellipse</Run>
+            <LineBreak />
+            <Run>* RoundedRectangle</Run>
+            <LineBreak />
+            <Run>* Path </Run>
+            <LineBreak />
+            <Run>with and without the helpers and parsers from</Run>
+            <Hyperlink NavigateUri="https://github.com/ratishphilip/CompositionProToolkit">CompositionProToolkit</Hyperlink><Run>.</Run>
+            <LineBreak />
+            <LineBreak />
+            <LineBreak />
+            <LineBreak />
+            <Run FontSize="48"
+                 FontWeight="Light">Credits</Run>
+            <LineBreak />
+            <LineBreak />
+            <Run>Clock menu icon by Rediffusion from the Noun Project.</Run>
+            <LineBreak />
+            <Run FontFamily="Segoe UI">Pro Clock SVG paths by Syncfusion Metro Studio.</Run>
+            <LineBreak />
+            <Run>Background image designed by</Run>
+            <Hyperlink NavigateUri="http://www.freepik.com"
+                       FontFamily="Segoe UI">Mrsiraphol/Freepik</Hyperlink><Run>.</Run>
         </TextBlock>
     </Grid>
 </Page>

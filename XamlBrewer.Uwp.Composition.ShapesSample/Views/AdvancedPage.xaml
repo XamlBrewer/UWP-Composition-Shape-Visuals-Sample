@@ -20,9 +20,8 @@
                    FontWeight="Light"
                    HorizontalAlignment="Left"
                    Margin="0"
-                   TextLineBounds="TrimToCapHeight"
-                   FontFamily="Segoe UI">
-                <Run Text="Visual Shapes and CompositionProToolkit" />
+                   TextLineBounds="TrimToCapHeight">
+                <Run Text="CompositionProToolkit Parser Sample" />
         </TextBlock>
 
         <Path Data="{StaticResource MainPageIcon}"
