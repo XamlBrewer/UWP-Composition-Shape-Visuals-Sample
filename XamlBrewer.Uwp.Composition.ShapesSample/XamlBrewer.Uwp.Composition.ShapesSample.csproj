@@ -95,6 +95,7 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\CompositorExtensions.cs" />
     <Compile Include="Controls\ProClock.xaml.cs">
       <DependentUpon>ProClock.xaml</DependentUpon>
     </Compile>
