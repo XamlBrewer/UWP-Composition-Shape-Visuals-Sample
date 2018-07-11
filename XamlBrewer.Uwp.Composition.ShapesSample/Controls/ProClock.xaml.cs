@@ -12,12 +12,16 @@ namespace XamlBrewer.Uwp.Controls
 {
     public sealed partial class ProClock : UserControl
     {
+        // Core
         private Compositor _compositor;
         private ContainerVisual _root;
 
-        private CompositionSpriteShape _hourhandSpriteShape;
-        private CompositionSpriteShape _minutehandSpriteShape;
+        // Shapes
+        private CompositionContainerShape _hourContainerShape;
+        private CompositionContainerShape _minuteContainerShape;
         private CompositionSpriteShape _secondhandSpriteShape;
+
+        // Animation
         private CompositionScopedBatch _batch;
 
         private DispatcherTimer _timer = new DispatcherTimer();
@@ -51,7 +55,12 @@ namespace XamlBrewer.Uwp.Controls
             facePathGeometry.Path = faceCompositionPath;
 
             var faceSpriteShape = _compositor.CreateSpriteShape(facePathGeometry);
-            faceSpriteShape.FillBrush = _compositor.CreateColorBrush(Color.FromArgb(0x66, 0x9A, 0xCD, 0x32));
+            var brush = _compositor.CreateLinearGradientBrush();
+            brush.ColorStops.Add(_compositor.CreateColorGradientStop(0f, Colors.Blue));
+            brush.ColorStops.Add(_compositor.CreateColorGradientStop(0.45f, Colors.Yellow));
+            brush.ColorStops.Add(_compositor.CreateColorGradientStop(0.55f, Colors.Yellow));
+            brush.ColorStops.Add(_compositor.CreateColorGradientStop(1f, Colors.Red));
+            faceSpriteShape.FillBrush = brush;
             faceSpriteShape.Offset = new Vector2(12.0f, 13.0f);
             faceSpriteShape.Scale = new Vector2(5.5f); ;
 
@@ -66,13 +75,15 @@ namespace XamlBrewer.Uwp.Controls
                 // SpriteVisual tick;
                 for (int i = 0; i < 12; i++)
                 {
+                    //var tickPath = "M12.981321,2.3376766C10.112283,4.0456734,9.0862758,9.2167526,8.6792905,11.264781L8.5952756,11.687759C8.4882801,12.200765 8.0492818,12.580775 7.5262678,12.610774 7.0102732,12.62179 6.5272682,12.315788 6.3612821,11.820787 6.0932748,11.020759 5.434274,9.7027507 4.5042446,8.0937238 4.4012473,9.374744 4.1832588,10.787755 3.7792644,11.388774L3.7812481,11.389782C1.6152482,14.572802 1.9792339,19.745864 2.0992296,21.445898 2.1232471,21.796884 2.1372549,21.987896 2.1322501,22.133894 2.7132475,29.441991 11.030289,29.958995 11.384295,29.977977L11.3893,29.978984C18.626347,30.366989,21.162375,24.867933,21.465356,24.117925L21.460351,24.087925 21.524379,23.868898C22.646395,20.020862,22.556367,16.784833,21.272362,14.758809L21.198386,14.627795C19.991347,12.086781 19.556348,10.451752 19.431346,9.3477359 18.508366,10.592745 18.09833,12.173788 17.90033,12.936797 17.90033,12.936797 17.578368,13.538793 17.383359,13.683784 17.196345,13.822794 16.723321,13.846811 16.723321,13.846811 16.193349,13.791787 15.789354,13.36478 15.762316,12.831785 15.648362,10.766758 13.78931,6.7087288 13.512331,6.2757097L13.406312,6.0917173C12.817319,4.7286949,12.852322,3.3426624,12.981321,2.3376766z M13.630032,5.2754642E-05C13.988285,0.0030336003 14.340338,0.13233079 14.615335,0.37363419 15.018353,0.72663501 15.199323,1.2516654 15.099347,1.7766651 14.954326,2.545656 14.686319,3.9686766 15.224348,5.2566858 15.578355,5.869699 16.401358,7.6497183 17.015315,9.4797569 17.461362,8.5927224 18.076358,7.6877132 18.930365,6.969718 19.409373,6.5647145 20.074357,6.4957133 20.624346,6.7847181 21.162375,7.068718 21.469384,7.6437369 21.407372,8.2487245 21.288354,9.4187513 21.817349,11.258769 22.980382,13.717781 24.555403,16.251836 24.719407,20.029865 23.455359,24.392921 23.293372,25.284931 22.416352,26.809942 21.317345,28.036945 19.669385,29.877969 16.767327,32.000001 12.150323,32.000001 11.867301,32.000001 11.577321,31.992008 11.282305,31.976017 7.6562736,31.796999 0.66422259,29.52799 0.13223667,22.211896L0.12424106,22.104902 0.14023227,21.996898C0.13324372,21.986888 0.12024314,21.818887 0.10422152,21.585882 -0.027768101,19.715866 -0.42776466,14.025798 2.124254,10.269743 2.2302425,9.9927631 2.5602314,8.7097278 2.5822346,6.3957062 2.5892537,5.7186966 3.0322499,5.140687 3.6862459,4.9606924 4.3362443,4.7846952 5.0102599,5.047699 5.362252,5.6247015 5.851269,6.4257055 6.5582745,7.6167283 7.1722615,8.7877317 7.9332836,5.7157059 9.531286,1.2696405 13.144316,0.07562668 13.303066,0.023440913 13.46719,-0.0013024495 13.630032,5.2754642E-05z";
                     var ellipseGeometry = _compositor.CreateEllipseGeometry();
                     ellipseGeometry.Radius = new Vector2(4.0f, 4.0f);
 
                     var tickSpriteShape = _compositor.CreateSpriteShape(ellipseGeometry);
+
                     tickSpriteShape.FillBrush = _compositor.CreateColorBrush(Colors.Transparent);
                     tickSpriteShape.StrokeThickness = 0.5f;
-                    tickSpriteShape.StrokeBrush = _compositor.CreateColorBrush(Color.FromArgb(0xBB, 0x9A, 0xCD, 0x32));
+                    tickSpriteShape.StrokeBrush = _compositor.CreateColorBrush(Colors.Orange);
                     tickSpriteShape.Offset = new Vector2(100.0f, 5.0f);
                     tickSpriteShape.CenterPoint = new Vector2(0.0f, 95.0f);
                     tickSpriteShape.RotationAngleInDegrees = i * 30;
@@ -97,33 +108,60 @@ namespace XamlBrewer.Uwp.Controls
             _secondhandSpriteShape.Offset = new Vector2(100f, 5f);
             _secondhandSpriteShape.CenterPoint = new Vector2(0.0f, 95.0f);
 
-            var handShapeVisual = _compositor.CreateShapeVisual();
-            handShapeVisual = _compositor.CreateShapeVisual();
-            handShapeVisual.Size = new Vector2(200.0f, 200.0f);
-            handShapeVisual.Shapes.Add(_secondhandSpriteShape);
-            _root.Children.InsertAtTop(handShapeVisual);
+            var shapeVisual = _compositor.CreateShapeVisual();
+            shapeVisual = _compositor.CreateShapeVisual();
+            shapeVisual.Size = new Vector2(200.0f, 200.0f);
+            shapeVisual.Shapes.Add(_secondhandSpriteShape);
+            _root.Children.InsertAtTop(shapeVisual);
             _secondhandSpriteShape.RotationAngleInDegrees = (float)(int)DateTime.Now.TimeOfDay.TotalSeconds * 6;
 
+            shapeVisual.Shapes.Add(containerShape);
+
             // Hour Hand
-            pathData = "M5.4985821,18.057423C4.918455,18.058264 3.5173249,18.173275 2.7009144,19.187313 1.7689097,20.345285 1.7639097,22.472235 2.6849146,25.336166 2.7549148,25.518162 4.7979251,30.666039 13.64697,29.926056 15.727981,29.942057 17.56599,29.201075 18.941997,27.837107 20.236003,26.555138 20.949007,24.867178 20.949007,23.08322L20.945943,20.727419 20.841051,20.76297C20.559425,20.850718,20.260129,20.898003,19.950004,20.898003L19.556005,20.898003C18.625632,20.898003,17.792712,20.472437,17.241986,19.805511L17.208552,19.762995 17.110358,19.82601C16.656746,20.101946,16.124579,20.260994,15.556017,20.260994L15.163018,20.260994C14.852893,20.260994,14.553596,20.213675,14.27197,20.125875L14.262194,20.12256 14.247074,20.197342C13.884972,21.760424,12.319589,22.940224,10.447954,22.940224L6.1909325,22.940224C5.6389294,22.940224 5.1909271,22.492233 5.1909274,21.940247 5.1909271,21.38826 5.6389294,20.940271 6.1909325,20.940271L10.447954,20.940271C11.465959,20.940271 12.325963,20.283287 12.325963,19.506306 12.325963,18.728323 11.465959,18.071339 10.447954,18.071339L5.8669305,18.071339C5.8319304,18.071339 5.7969303,18.06934 5.76193,18.066339 5.7590861,18.065903 5.6610174,18.057186 5.4985821,18.057423z M19.556005,12.521002C19.038507,12.521002,18.612414,12.915631,18.561174,13.41897L18.556015,13.52087 18.556015,17.260996 18.556008,17.898003C18.556008,18.450003,19.004007,18.898003,19.556005,18.898003L19.950004,18.898003C20.501003,18.898003,20.950002,18.450003,20.950002,17.898003L20.950002,13.521002C20.950002,12.970002,20.501003,12.521002,19.950004,12.521002z M15.163018,11.156998C14.611018,11.156998,14.163019,11.605998,14.163019,12.156998L14.163019,17.260996C14.163019,17.811995,14.611018,18.260996,15.163018,18.260996L15.556017,18.260996C16.07258,18.260996,16.499493,17.866365,16.55084,17.363028L16.556012,17.261089 16.556012,13.521002 16.556016,12.156998C16.556016,11.605998,16.107017,11.156998,15.556017,11.156998z M10.966014,10.422006C10.348202,10.422006,9.8376169,10.886947,9.776207,11.479824L9.7700343,11.599635 9.7700343,13.573996 9.7700152,13.574373 9.7700152,16.071388 10.447954,16.071388C11.049551,16.071388,11.619506,16.193281,12.128033,16.410637L12.159335,16.424856 12.163013,16.348003 12.163013,11.600005C12.163013,10.951005,11.626013,10.422006,10.966014,10.422006z M6.5230465,1.9999924C5.8690224,1.9999921,5.37604,2.5270002,5.37604,3.2269967L5.37604,16.058529 5.4411616,16.057322C5.6611521,16.055147,5.8246179,16.064638,5.9099309,16.071388L7.7700167,16.071388 7.7700167,11.600005 7.7700286,11.599538 7.7700286,3.2269967C7.7700286,2.5499952,7.2110367,1.9999921,6.5230465,1.9999924z M6.5240231,0C8.3140368,0,9.7700343,1.4480056,9.7700343,3.2269967L9.7700343,8.6536684 9.8679652,8.6152C10.210494,8.490242 10.580359,8.4220057 10.966014,8.4220057 11.957701,8.4220057 12.84529,8.8732004 13.432115,9.5798149L13.497941,9.6630468 13.608677,9.5919828C14.062288,9.3160477,14.594455,9.1569986,15.163018,9.1569986L15.556017,9.1569986C16.693141,9.1569986,17.684687,9.7931938,18.193356,10.728285L18.242692,10.82447 18.256628,10.817322C18.649995,10.627473,19.090819,10.521002,19.556005,10.521002L19.950004,10.521002C21.604002,10.521002,22.949998,11.867002,22.949998,13.521002L22.949998,17.898003C22.949998,18.00144,22.94474,18.103666,22.934478,18.20443L22.924722,18.280989 22.937686,18.365147C22.94115,18.398743,22.942955,18.432831,22.943017,18.467331L22.949018,23.08222C22.949018,25.404165 22.026014,27.597113 20.350004,29.258072 18.591996,31.001032 16.238984,31.939009 13.721971,31.92301 13.073967,31.978008 12.456964,32.003006 11.868961,32.003006 3.0589163,32.003006 0.88590527,26.241144 0.79190493,25.98015 -0.37610126,22.350237 -0.25010061,19.647303 1.1569066,17.915344 1.7644097,17.167612 2.5206948,16.71631 3.2527398,16.446163L3.3760343,16.403019 3.3760343,3.2269967C3.3760342,1.4169997,4.7590338,0,6.5240231,0z";
-            _hourhandSpriteShape = _compositor.CreateSpriteShape(pathData);
-            _hourhandSpriteShape.FillBrush = _compositor.CreateColorBrush(Colors.DarkSlateGray);
-            _hourhandSpriteShape.Offset = new Vector2(96.0f, 40f);
-            _hourhandSpriteShape.CenterPoint = new Vector2(4.0f, 60.0f);
-            handShapeVisual = _compositor.CreateShapeVisual();
-            handShapeVisual.Size = new Vector2(200.0f, 200.0f);
-            handShapeVisual.Shapes.Add(_hourhandSpriteShape);
-            _root.Children.InsertAtTop(handShapeVisual);
+            _hourContainerShape = _compositor.CreateContainerShape();
+            _hourContainerShape.CenterPoint = new Vector2(100f, 100f);
+            pathData = "M12.255911,27.32522L8.0630484,27.526361 8.1864796,27.611752C10.140031,28.930496,12.442738,29.76969,14.92437,29.959103L15.196924,29.976429z M21.404467,20.694029L14.985744,22.932507 13.552003,25.799997 18.044802,29.85059 18.080431,29.845798C19.57408,29.62236,20.991337,29.162128,22.29265,28.50465L22.345871,28.476482 23.529955,22.503323z M29.210682,20.634453L25.517668,22.762606 24.683252,26.97184 24.932693,26.772383C26.819304,25.205297,28.289207,23.153034,29.149136,20.808857z M5.3831925,16.709015L2.9988379,21.193972 3.0042195,21.207821C3.6518717,22.818348,4.5906091,24.281637,5.7549496,25.532206L5.8481069,25.630014 11.536957,25.357107 13.102927,22.225155 8.9967108,16.709015z M2.3533926,12.871181L2.2993231,13.112665C2.1031716,14.04466 2,15.010502 2,16 2,16.804792 2.0682492,17.593935 2.199264,18.361946L2.2096035,18.418463 3.6656468,15.680605z M24.760532,10.328215L22.692017,12.111796 22.692017,19.163755 24.737003,20.902988 29.863638,17.949438 29.887318,17.780693C29.96167,17.197456 30,16.603123 30,16 30,15.019572 29.89871,14.062368 29.706047,13.138304L29.65974,12.931304z M14.649007,10.308994L10.740002,15.702001 14.637007,20.937008 20.692013,18.825005 20.692013,12.370996z M6.4617815,5.7615499L6.2999635,5.9137912C5.0581431,7.1085043,4.0357132,8.529705,3.2998557,10.110212L3.285491,10.142103 5.4200115,14.709007 8.9903822,14.709007 13.097117,9.0434904 11.682418,6.3801508 6.4570179,5.8049932z M24.500578,4.883769L25.476269,8.44454 28.727886,10.17196 28.702246,10.114729C27.758574,8.0859718,26.342802,6.3194904,24.596939,4.9572902z M17.810635,2.1168842L13.578016,5.6880093 14.969813,8.3058071 21.471794,10.522912 23.493984,8.7790184 22.007908,3.3556633 21.997314,3.3504777C20.792271,2.7768824,19.492863,2.3705254,18.129286,2.1615987z M14.783471,2.0534487L14.570561,2.0724125C12.477295,2.2856328,10.519001,2.9618855,8.8000307,3.9968209L8.7258015,4.0426617 11.998716,4.4028473z M16,0C24.822021,0 32,7.1779785 32,16 32,24.822021 24.822021,32 16,32 7.1779785,32 0,24.822021 0,16 0,7.1779785 7.1779785,0 16,0z";
+            var spriteShape = _compositor.CreateSpriteShape(pathData);
+            spriteShape.FillBrush = _compositor.CreateColorBrush(Colors.DarkSlateGray);
+            spriteShape.Offset = new Vector2(84.0f, 30f);
+            shapeVisual = _compositor.CreateShapeVisual();
+            shapeVisual.Size = new Vector2(200.0f, 200.0f);
+            _hourContainerShape.Shapes.Add(spriteShape);
+
+            var line = _compositor.CreateLineGeometry();
+            line.Start = new Vector2(100f, 62f);
+            line.End = new Vector2(100f, 100f);
+            spriteShape = _compositor.CreateSpriteShape(line);
+            spriteShape.FillBrush = _compositor.CreateColorBrush(Colors.DarkSlateGray);
+            spriteShape.StrokeBrush = _compositor.CreateColorBrush(Colors.DarkSlateGray);
+            spriteShape.StrokeThickness = 1f;
+            _hourContainerShape.Shapes.Add(spriteShape);
+
+            shapeVisual.Shapes.Add(_hourContainerShape);
+            _root.Children.InsertAtTop(shapeVisual);
 
             // Minute Hand
-            _minutehandSpriteShape = _compositor.CreateSpriteShape(pathData);
-            _minutehandSpriteShape.FillBrush = _compositor.CreateColorBrush(Colors.DarkSlateGray);
-            _minutehandSpriteShape.Offset = new Vector2(96.0f, 10.0f);
-            _minutehandSpriteShape.CenterPoint = new Vector2(4.0f, 90.0f);
-            handShapeVisual = _compositor.CreateShapeVisual();
-            handShapeVisual.Size = new Vector2(200.0f, 200.0f);
-            handShapeVisual.Shapes.Add(_minutehandSpriteShape);
-            _root.Children.InsertAtTop(handShapeVisual);
+            _minuteContainerShape = _compositor.CreateContainerShape();
+            _minuteContainerShape.CenterPoint = new Vector2(100f, 100f);
+            pathData = "M15.9,27.2L12.8,28.4 12.4,30.4C14.8,31,17.4,31,19.7,30.4L19.6,28.3z M22.5,18.6L16.4,22.9 16.4,26.2 20.1,27.3 25.599999,23.4 25.4,19.6z M9.6999998,18.5L6.3999996,19.6 6.5,23.599999 12.2,27.5 15.3,26.3 15.3,22.9z M3,16.7L1.1999998,16.9C1.3999996,19.6,2.1999998,22.1,3.6999998,24.3L5.3999996,23.5 5.3000002,19.4z M29,16.1L26.5,19.4 26.7,23.3 28.4,24.4C30,22.1,30.9,19.4,31,16.6z M9.3999996,8.2999997L5.7999997,9.4000001 3.8000002,16 6,18.6 9.3999996,17.4 11.8,10.6z M22.3,7.7999997L20.4,10.5 22.9,17.5 25.7,18.5 28.099999,15.3 25.9,8.6999998z M19.4,4.3000002L12.5,4.3999996 10.3,7.6999998 12.6,10 19.6,10 21.5,7.2999997z M10.7,2.0999994C8.1999998,3.0999994,6,4.6999998,4.3000002,6.9000001L5.5999994,8.4000001 9.1999998,7.2999997 11.4,4z M21.2,2L20.2,3.5999994 22.4,6.6999998 26,7.6999998 27.5,6.5C25.8,4.5,23.7,3,21.2,2z M16,0C24.8,0 32,7.1999998 32,16 32,24.8 24.8,32 16,32 7.1999998,32 0,24.8 0,16 0,7.1999998 7.1999998,0 16,0z";
+            spriteShape = _compositor.CreateSpriteShape(pathData);
+            spriteShape.FillBrush = _compositor.CreateColorBrush(Colors.DarkSlateGray);
+            spriteShape.Offset = new Vector2(84.0f, 10.0f);
+            shapeVisual = _compositor.CreateShapeVisual();
+            shapeVisual.Size = new Vector2(200.0f, 200.0f);
+            _minuteContainerShape.Shapes.Add(spriteShape);
+
+            line = _compositor.CreateLineGeometry();
+            line.Start = new Vector2(100f, 42f);
+            line.End = new Vector2(100f, 100f);
+            spriteShape = _compositor.CreateSpriteShape(line);
+            spriteShape.FillBrush = _compositor.CreateColorBrush(Colors.DarkSlateGray);
+            spriteShape.StrokeBrush = _compositor.CreateColorBrush(Colors.DarkSlateGray);
+            spriteShape.StrokeThickness = 1f;
+            _minuteContainerShape.Shapes.Add(spriteShape);
+
+            shapeVisual.Shapes.Add(_minuteContainerShape);
+            _root.Children.InsertAtTop(shapeVisual);
 
             SetHoursAndMinutes();
 
@@ -167,8 +205,8 @@ namespace XamlBrewer.Uwp.Controls
         private void SetHoursAndMinutes()
         {
             var now = DateTime.Now;
-            _hourhandSpriteShape.RotationAngleInDegrees = (float)now.TimeOfDay.TotalHours * 30;
-            _minutehandSpriteShape.RotationAngleInDegrees = now.Minute * 6;
+            _hourContainerShape.RotationAngleInDegrees = (float)now.TimeOfDay.TotalHours * 30;
+            _minuteContainerShape.RotationAngleInDegrees = now.Minute * 6;
         }
     }
 }
