@@ -43,14 +43,4 @@ namespace XamlBrewer.Uwp.Controls
             return BuildPathWithLines(builder, vectors, canvasFigureLoop);
         }
     }
-
-    public class PathNode
-    {
-        private Vector2 _vector2;
-
-        public PathNode(Vector2 vector2)
-        {
-            _vector2 = vector2;
-        }
-    }
 }

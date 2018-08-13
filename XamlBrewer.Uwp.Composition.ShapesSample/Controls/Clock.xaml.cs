@@ -50,7 +50,7 @@ namespace XamlBrewer.Uwp.Controls
             var linearGradientBrush = _compositor.CreateLinearGradientBrush();
             linearGradientBrush.ColorStops.Add(_compositor.CreateColorGradientStop(0, Color.FromArgb(0x55, 0xFF, 0xFF, 0xFF)));
             linearGradientBrush.ColorStops.Add(_compositor.CreateColorGradientStop(1, Color.FromArgb(0x99, 0x9A, 0xCD, 0x32)));
-            faceSpriteShape.StrokeBrush = linearGradientBrush; 
+            faceSpriteShape.StrokeBrush = linearGradientBrush;
             faceSpriteShape.Offset = new Vector2(100.0f, 100.0f);
             containerShape.Shapes.Add(faceSpriteShape);
 
